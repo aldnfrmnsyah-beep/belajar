@@ -1,18 +1,36 @@
-<h1>Tentang Saya</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tentang Saya</title>
 
-<p>Ini adalah foto saya.</p>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
 
+    <h1>Hallo Saya Michel 🤓</h1>
 
+    <p>Ini adalah foto saya 🤓.</p>
 
-<br><br>
+    <button onclick="tampilFoto()">Klik ini 👉</button>
 
-<img id="fotoSaya"
-     src="IMG_20260422_174759.jpg"
-     width="300"
-     style="display:none;">
+    <br><br>
 
-<script>
-function tampilFoto() {
-    document.getElementById("fotoSaya").style.display = "block";
-}
-</script>
+    <img id="fotoSaya"
+         src="IMG_20260422_174759.jpg"
+         width="300"
+         style="display:none;">
+
+    <script>
+        function tampilFoto() {
+            document.getElementById("fotoSaya").style.display = "block";
+        }
+    </script>
+
+</body>
+</html>
