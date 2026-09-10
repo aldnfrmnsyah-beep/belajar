@@ -11,9 +11,18 @@
 <h1>Tentang Saya</h1>
 
 <p>Ini adalah foto saya.</p>
-<a href="#">klik</a>
-<a href="#">ini</a>
-<a href="#">👈</a>
+<button onclick="tampilFoto()">Klik ini 👉</button>
+
+<img id="fotoSaya"
+     src="NAMA_FILE_FOTOMU.webp"
+     width="250"
+     style="display:none;">
+
+<script>
+function tampilFoto() {
+    document.getElementById("fotoSaya").style.display = "block";
+}
+</script>
 <style>
 body{
     background:black;
