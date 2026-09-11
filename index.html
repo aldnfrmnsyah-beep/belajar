@@ -389,11 +389,35 @@ canvas {
 
 <div id="gameWrap">
     <canvas id="game"></canvas>
-</div>
+</div>  <
+function updateCoins() {
 
-<div id="info">
-    ← → / A D = Bergerak &nbsp; • &nbsp;
-    SPACE / W = Lompat
+    for (const coin of coins) {
+
+        if (coin.collected)
+            continue;
+
+        const box = {
+
+            x: coin.x - 12,
+            y: coin.y - 12,
+
+            width: 24,
+            height: 24
+        };
+
+        if (collision(player, box)) {
+
+            coin.collected = true;
+
+            player.coins++;
+
+            updateHUD();
+        }
+    }
+}
+
+
 </div>
 
 <div id="hud">
