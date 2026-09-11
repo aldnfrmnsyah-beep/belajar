@@ -121,24 +121,443 @@
 
 </body>
 </html>
-<div id="joystick">
-  <button ontouchstart="direction='UP'">⬆️</button><br>
-  <button ontouchstart="direction='LEFT'">⬅️</button>
-  <button ontouchstart="direction='DOWN'">⬇️</button>
-  <button ontouchstart="direction='RIGHT'">➡️</button>
-</div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Game</title>
+
 <style>
-#joystick{
-    margin-top:20px;
+    * {
+        box-sizing: border-box;
+        user-select: none;
+    }
+
+    body {
+        margin: 0;
+        background: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+
+    h2 {
+        margin: 15px 0 5px;
+    }
+
+    #score {
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    #game {
+        position: relative;
+        width: 285px;
+        height: 285px;
+        margin: auto;
+        border: 2px solid #888;
+        background: #111;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    /* GAME OVER */
+    #gameOver {
+        position: absolute;
+        inset: 0;
+        display: none;
+        background: rgba(0,0,0,0.8);
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 5;
+    }
+
+    #gameOver h1 {
+        color: red;
+        font-size: 32px;
+        margin: 0 0 15px;
+    }
+
+    #restart {
+        border: none;
+        background: #00ff22;
+        color: black;
+        font-weight: bold;
+        padding: 12px 22px;
+        border-radius: 20px;
+        font-size: 16px;
+    }
+
+    /* ANALOG */
+    #joystick {
+        width: 130px;
+        height: 130px;
+        margin: 22px auto;
+        border-radius: 50%;
+        background: #151515;
+        border: 4px solid #00ff22;
+        position: relative;
+        touch-action: none;
+    }
+
+    #stick {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: #00ff22;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 15px #00ff22;
+    }
+
+    #direction {
+        margin-top: 5px;
+        font-size: 12px;
+        color: #aaa;
+    }
+</style>
+</head>
+
+<body>
+
+<h2>🐍 Snake Game</h2>
+<div id="score">Skor: 0</div>
+
+<div id="game">
+
+    <canvas id="canvas" width="280" height="280"></canvas>
+
+    <div id="gameOver">
+        <h1>GAME OVER</h1>
+        <div id="finalScore">Skor: 0</div>
+        <br>
+        <button id="restart">🔄 Main Lagi</button>
+    </div>
+
+</div>
+
+<!-- ANALOG BULAT -->
+<div id="joystick">
+    <div id="stick"></div>
+</div>
+
+<div id="direction">Geser analog untuk bergerak</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const scoreText = document.getElementById("score");
+const gameOver = document.getElementById("gameOver");
+const finalScore = document.getElementById("finalScore");
+
+const joystick = document.getElementById("joystick");
+const stick = document.getElementById("stick");
+const restart = document.getElementById("restart");
+
+const grid = 20;
+const tile = 14;
+
+let snake;
+let food;
+let direction;
+let nextDirection;
+let score;
+let gameRunning;
+let gameLoop;
+
+function startGame() {
+    snake = [
+        {x: 10, y: 10},
+        {x: 9, y: 10},
+        {x: 8, y: 10}
+    ];
+
+    direction = {x: 1, y: 0};
+    nextDirection = {x: 1, y: 0};
+
+    score = 0;
+    gameRunning = true;
+
+    scoreText.textContent = "Skor: 0";
+    gameOver.style.display = "none";
+
+    createFood();
+
+    clearInterval(gameLoop);
+    gameLoop = setInterval(update, 120);
 }
 
-#joystick button{
-    width:70px;
-    height:70px;
-    font-size:30px;
-    margin:5px;
-    border:none;
-    border-radius:50%;
-    background:lime;
+function createFood() {
+    do {
+        food = {
+            x: Math.floor(Math.random() * 20),
+            y: Math.floor(Math.random() * 20)
+        };
+    } while (
+        snake.some(part => part.x === food.x && part.y === food.y)
+    );
+}
+
+function update() {
+    if (!gameRunning) return;
+
+    direction = nextDirection;
+
+    const head = {
+        x: snake[0].x + direction.x,
+        y: snake[0].y + direction.y
+    };
+
+    // Tabrak dinding
+    if (
+        head.x < 0 ||
+        head.x >= 20 ||
+        head.y < 0 ||
+        head.y >= 20
+    ) {
+        die();
+        return;
+    }
+
+    // Tabrak badan sendiri
+    if (
+        snake.some(part =>
+            part.x === head.x && part.y === head.y
+        )
+    ) {
+        die();
+        return;
+    }
+
+    snake.unshift(head);
+
+    // Makan makanan
+    if (
+        head.x === food.x &&
+        head.y === food.y
+    ) {
+        score++;
+        scoreText.textContent = "Skor: " + score;
+        createFood();
+    } else {
+        snake.pop();
+    }
+
+    draw();
+}
+
+function draw() {
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Makanan
+    ctx.fillStyle = "red";
+    ctx.fillRect(
+        food.x * tile,
+        food.y * tile,
+        tile - 1,
+        tile - 1
+    );
+
+    // Ular
+    snake.forEach((part, index) => {
+        ctx.fillStyle = index === 0
+            ? "#00ff22"
+            : "#00cc00";
+
+        ctx.fillRect(
+            part.x * tile,
+            part.y * tile,
+            tile - 1,
+            tile - 1
+        );
+    });
+}
+
+function die() {
+    gameRunning = false;
+    clearInterval(gameLoop);
+
+    finalScore.textContent = "Skor: " + score;
+
+    // Tampilkan GAME OVER
+    gameOver.style.display = "flex";
+
+    // Kembalikan analog ke tengah
+    resetJoystick();
+}
+
+/* =========================
+   KEYBOARD
+========================= */
+
+document.addEventListener("keydown", e => {
+
+    if (e.key === "ArrowUp" && direction.y === 0) {
+        nextDirection = {x: 0, y: -1};
+    }
+
+    if (e.key === "ArrowDown" && direction.y === 0) {
+        nextDirection = {x: 0, y: 1};
+    }
+
+    if (e.key === "ArrowLeft" && direction.x === 0) {
+        nextDirection = {x: -1, y: 0};
+    }
+
+    if (e.key === "ArrowRight" && direction.x === 0) {
+        nextDirection = {x: 1, y: 0};
+    }
+});
+
+/* =========================
+   ANALOG BULAT
+========================= */
+
+let touching = false;
+
+joystick.addEventListener("pointerdown", e => {
+    touching = true;
+    joystick.setPointerCapture(e.pointerId);
+    moveJoystick(e);
+});
+
+joystick.addEventListener("pointermove", e => {
+    if (touching) {
+        moveJoystick(e);
+    }
+});
+
+joystick.addEventListener("pointerup", () => {
+    touching = false;
+    resetJoystick();
+});
+
+joystick.addEventListener("pointercancel", () => {
+    touching = false;
+    resetJoystick();
+});
+
+function moveJoystick(e) {
+
+    if (!gameRunning) return;
+
+    const rect = joystick.getBoundingClientRect();
+
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    let dx = e.clientX - centerX;
+    let dy = e.clientY - centerY;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const maxDistance = 36;
+
+    if (distance > maxDistance) {
+        dx = dx / distance * maxDistance;
+        dy = dy / distance * maxDistance;
+    }
+
+    stick.style.left = `calc(50% + ${dx}px)`;
+    stick.style.top = `calc(50% + ${dy}px)`;
+
+    // Tentukan arah berdasarkan gerakan terbesar
+    if (Math.abs(dx) > Math.abs(dy)) {
+
+        if (dx > 10 && direction.x === 0) {
+            nextDirection = {x: 1, y: 0};
+        }
+
+        if (dx < -10 && direction.x === 0) {
+            nextDirection = {x: -1, y: 0};
+        }
+
+    } else {
+
+        if (dy > 10 && direction.y === 0) {
+            nextDirection = {x: 0, y: 1};
+        }
+
+        if (dy < -10 && direction.y === 0) {
+            nextDirection = {x: 0, y: -1};
+        }
+    }
+}
+
+function resetJoystick() {
+    stick.style.left = "50%";
+    stick.style.top = "50%";
+}
+
+/* Tombol restart */
+restart.addEventListener("click", startGame);
+
+/* Mulai game */
+startGame();
+</script>
+
+<div id="gameOver">
+    <h1>GAME OVER</h1>
+    <div id="finalScore">Skor: 0</div>
+    <button id="retryButton">🔄 Coba Lagi</button>
+</div>
+
+<style>
+#gameOver {
+    position: absolute;
+    inset: 0;
+    display: none;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 10;
+}
+
+#gameOver h1 {
+    color: red;
+    font-size: 32px;
+    margin: 0 0 10px;
+}
+
+#finalScore {
+    color: white;
+    font-size: 18px;
+}
+
+#retryButton {
+    margin-top: 15px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 25px;
+    background: #00ff22;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#retryButton:active {
+    transform: scale(0.95);
 }
 </style>
+
+<script>
+const retryButton = document.getElementById("retryButton");
+
+retryButton.addEventListener("click", function() {
+    startGame();
+});
+</script>
+
+</body>
+</html>
