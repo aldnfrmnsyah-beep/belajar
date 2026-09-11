@@ -2,7 +2,9 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
 
 <title>Super Platform Adventure</title>
 
@@ -13,160 +15,420 @@
     padding: 0;
 }
 
-body {
-    background: #111;
+html, body {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+}
+
+body {
+    background: #08111f;
     font-family: Arial, sans-serif;
     touch-action: none;
 }
 
+/* ==============================
+   GAME SCREEN
+============================== */
+
+#gameWrap {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 20%, #243b5c, #08111f 75%);
+}
+
 canvas {
     display: block;
-    margin: auto;
-    background: #6ec6ff;
+
+    width: min(100vw, 177.78vh);
+    height: min(100vh, 56.25vw);
+
+    background: #65c9ff;
+
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+
+    box-shadow:
+        0 0 50px rgba(0,0,0,.45);
 }
+
+/* ==============================
+   TOP INFO
+============================== */
 
 #info {
     position: fixed;
-    top: 10px;
+    top: 12px;
     left: 50%;
+
     transform: translateX(-50%);
+
     color: white;
-    background: rgba(0,0,0,.65);
-    padding: 8px 15px;
-    border-radius: 8px;
-    z-index: 5;
-    font-size: 14px;
+
+    background: rgba(8,17,31,.72);
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    padding: 9px 16px;
+
+    border-radius: 999px;
+
+    z-index: 10;
+
+    font-size: 13px;
+
     text-align: center;
+
+    backdrop-filter: blur(8px);
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.25);
+
     white-space: nowrap;
 }
 
+/* ==============================
+   HUD
+============================== */
+
 #hud {
     position: fixed;
-    top: 55px;
+
+    top: 12px;
     left: 15px;
-    color: white;
-    background: rgba(0,0,0,.65);
-    padding: 9px 14px;
-    border-radius: 8px;
-    z-index: 5;
-    font-size: 17px;
-    font-weight: bold;
+
+    display: flex;
+    gap: 10px;
+
+    z-index: 10;
 }
 
-/* Kontrol HP */
+.stat {
+    min-width: 82px;
+
+    padding: 9px 13px;
+
+    color: white;
+
+    background: rgba(8,17,31,.75);
+
+    border: 1px solid rgba(255,255,255,.16);
+
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    backdrop-filter: blur(8px);
+
+    box-shadow:
+        0 5px 20px rgba(0,0,0,.2);
+}
+
+/* ==============================
+   MOBILE CONTROLS
+============================== */
+
 #mobileControls {
     position: fixed;
-    bottom: 20px;
+
     left: 0;
-    width: 100%;
+    right: 0;
+    bottom: 18px;
+
     display: flex;
+
     justify-content: space-between;
+
     padding: 0 20px;
+
     z-index: 20;
+
     pointer-events: none;
 }
 
 .controlGroup {
     display: flex;
+
     gap: 12px;
+
     pointer-events: auto;
 }
 
 .controlBtn {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,.5);
-    background: rgba(0,0,0,.55);
+    width: 68px;
+    height: 68px;
+
+    border-radius: 22px;
+
+    border: 2px solid rgba(255,255,255,.28);
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.12),
+            rgba(0,0,0,.45)
+        );
+
     color: white;
+
     font-size: 28px;
+
     font-weight: bold;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     user-select: none;
     -webkit-user-select: none;
+
+    box-shadow:
+        0 7px 18px rgba(0,0,0,.35);
+
+    backdrop-filter: blur(6px);
+
+    transition: transform .08s;
 }
 
 .controlBtn:active {
-    background: rgba(255,255,255,.35);
-    transform: scale(.95);
+    transform: scale(.91);
+
+    background:
+        rgba(255,255,255,.28);
 }
+
+#jumpBtn {
+    width: 76px;
+    height: 76px;
+
+    border-radius: 50%;
+}
+
+/* ==============================
+   GAME MESSAGE
+============================== */
 
 #message {
     position: fixed;
+
     inset: 0;
+
     display: none;
+
     align-items: center;
     justify-content: center;
+
     flex-direction: column;
-    background: rgba(0,0,0,.75);
+
+    background:
+        rgba(3,8,18,.78);
+
     color: white;
+
     z-index: 50;
+
     text-align: center;
+
+    backdrop-filter: blur(6px);
+}
+
+#messageBox {
+    padding: 35px 45px;
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30,50,80,.95),
+            rgba(8,17,31,.95)
+        );
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.5);
 }
 
 #message h1 {
-    font-size: 45px;
-    margin-bottom: 15px;
+    font-size: clamp(34px, 7vw, 60px);
+
+    margin-bottom: 12px;
 }
 
 #message p {
-    font-size: 19px;
+    font-size: 18px;
+
+    color: #dbeafe;
 }
 
 #restart {
-    margin-top: 20px;
+    margin-top: 24px;
+
     padding: 13px 28px;
+
     border: none;
-    border-radius: 10px;
-    background: #ffd43b;
-    color: #222;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            #ffe66d,
+            #f7b928
+        );
+
+    color: #302000;
+
     font-weight: bold;
+
     font-size: 17px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 20px rgba(0,0,0,.3);
 }
 
+#restart:active {
+    transform: scale(.95);
+}
+
+/* ==============================
+   DESKTOP
+============================== */
+
 @media (min-width: 800px) {
+
     #mobileControls {
         display: none;
     }
+
+}
+
+/* ==============================
+   MOBILE
+============================== */
+
+@media (max-width: 799px) {
+
+    #info {
+        top: auto;
+        bottom: 105px;
+
+        font-size: 11px;
+
+        padding: 7px 11px;
+
+        opacity: .8;
+    }
+
+    #hud {
+        top: 10px;
+        left: 10px;
+    }
+
+    .stat {
+        min-width: auto;
+
+        padding: 8px 11px;
+
+        font-size: 14px;
+    }
+
+}
+
+@media (max-height: 500px) {
+
+    #mobileControls {
+        bottom: 10px;
+    }
+
+    .controlBtn {
+        width: 55px;
+        height: 55px;
+
+        border-radius: 18px;
+
+        font-size: 23px;
+    }
+
+    #jumpBtn {
+        width: 62px;
+        height: 62px;
+    }
+
 }
 </style>
 </head>
 
 <body>
 
+<div id="gameWrap">
+    <canvas id="game"></canvas>
+</div>
+
 <div id="info">
-    ← → / A D = Bergerak &nbsp; | &nbsp; SPACE / W = Lompat
+    ← → / A D = Bergerak &nbsp; • &nbsp;
+    SPACE / W = Lompat
 </div>
 
 <div id="hud">
-    🪙 <span id="coinText">0</span>
-    &nbsp;&nbsp;
-    ❤️ <span id="lifeText">3</span>
+    <div class="stat">
+        🪙 <span id="coinText">0</span>
+    </div>
+
+    <div class="stat">
+        ❤️ <span id="lifeText">3</span>
+    </div>
 </div>
 
 <div id="message">
-    <h1 id="messageTitle">Game Over</h1>
-    <p id="messageText">Coba lagi!</p>
-    <button id="restart">🔄 Main Lagi</button>
+
+    <div id="messageBox">
+
+        <h1 id="messageTitle">
+            Game Over
+        </h1>
+
+        <p id="messageText">
+            Coba lagi!
+        </p>
+
+        <button id="restart">
+            🔄 Main Lagi
+        </button>
+
+    </div>
+
 </div>
 
-<canvas id="game"></canvas>
+<!-- MOBILE CONTROLS -->
 
-<!-- Kontrol HP -->
 <div id="mobileControls">
 
     <div class="controlGroup">
-        <div class="controlBtn" id="leftBtn">◀</div>
-        <div class="controlBtn" id="rightBtn">▶</div>
+
+        <div class="controlBtn" id="leftBtn">
+            ◀
+        </div>
+
+        <div class="controlBtn" id="rightBtn">
+            ▶
+        </div>
+
     </div>
 
     <div class="controlGroup">
-        <div class="controlBtn" id="jumpBtn">▲</div>
+
+        <div class="controlBtn" id="jumpBtn">
+            ▲
+        </div>
+
     </div>
 
 </div>
@@ -175,42 +437,48 @@ canvas {
 
 "use strict";
 
-// ======================================
-// CANVAS
-// ======================================
+/* ==================================================
+   CANVAS
+================================================== */
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("game");
+
+const ctx =
+    canvas.getContext("2d");
 
 canvas.width = 1000;
 canvas.height = 600;
 
 
-// ======================================
-// GAME SETTINGS
-// ======================================
+/* ==================================================
+   GAME SETTINGS
+================================================== */
 
 const gravity = 0.7;
 const speed = 5;
 const jumpPower = 14;
 
 let cameraX = 0;
+
 let gameOver = false;
 let gameWon = false;
 
 
-// ======================================
-// KEYBOARD
-// ======================================
+/* ==================================================
+   KEYBOARD
+================================================== */
 
 const keys = {};
 
-document.addEventListener("keydown", function(e) {
+document.addEventListener("keydown", e => {
 
     keys[e.key.toLowerCase()] = true;
 
     if (e.code === "Space") {
-        keys["space"] = true;
+
+        keys.space = true;
+
         e.preventDefault();
     }
 
@@ -218,41 +486,65 @@ document.addEventListener("keydown", function(e) {
         e.key.toLowerCase() === "r" &&
         (gameOver || gameWon)
     ) {
+
         restartGame();
     }
 });
 
-document.addEventListener("keyup", function(e) {
+
+document.addEventListener("keyup", e => {
 
     keys[e.key.toLowerCase()] = false;
 
     if (e.code === "Space") {
-        keys["space"] = false;
+
+        keys.space = false;
     }
 });
 
 
-// ======================================
-// MOBILE CONTROL
-// ======================================
+/* ==================================================
+   MOBILE
+================================================== */
 
 function mobileButton(button, key) {
 
-    button.addEventListener("touchstart", function(e) {
-        e.preventDefault();
-        keys[key] = true;
-    });
+    button.addEventListener(
+        "touchstart",
+        e => {
 
-    button.addEventListener("touchend", function(e) {
-        e.preventDefault();
-        keys[key] = false;
-    });
+            e.preventDefault();
 
-    button.addEventListener("touchcancel", function(e) {
-        e.preventDefault();
-        keys[key] = false;
-    });
+            keys[key] = true;
+        },
+        { passive: false }
+    );
+
+
+    button.addEventListener(
+        "touchend",
+        e => {
+
+            e.preventDefault();
+
+            keys[key] = false;
+        },
+        { passive: false }
+    );
+
+
+    button.addEventListener(
+        "touchcancel",
+        e => {
+
+            e.preventDefault();
+
+            keys[key] = false;
+        },
+        { passive: false }
+    );
 }
+
 
 mobileButton(
     document.getElementById("leftBtn"),
@@ -270,9 +562,9 @@ mobileButton(
 );
 
 
-// ======================================
-// PLAYER
-// ======================================
+/* ==================================================
+   PLAYER
+================================================== */
 
 const player = {
 
@@ -292,175 +584,173 @@ const player = {
 };
 
 
-// ======================================
-// PLATFORMS
-// ======================================
+/* ==================================================
+   PLATFORMS
+================================================== */
 
 const platforms = [
 
-    {x: 0, y: 550, w: 1000, h: 50},
+    {x:0, y:550, w:1000, h:50},
 
-    {x: 80, y: 450, w: 150, h: 25},
-    {x: 300, y: 390, w: 150, h: 25},
-    {x: 530, y: 450, w: 150, h: 25},
-    {x: 760, y: 350, w: 150, h: 25},
+    {x:80, y:450, w:150, h:25},
+    {x:300, y:390, w:150, h:25},
+    {x:530, y:450, w:150, h:25},
+    {x:760, y:350, w:150, h:25},
 
-    {x: 1050, y: 470, w: 150, h: 25},
-    {x: 1300, y: 400, w: 170, h: 25},
-    {x: 1550, y: 330, w: 150, h: 25},
-    {x: 1800, y: 450, w: 200, h: 25},
+    {x:1050, y:470, w:150, h:25},
+    {x:1300, y:400, w:170, h:25},
+    {x:1550, y:330, w:150, h:25},
+    {x:1800, y:450, w:200, h:25},
 
-    {x: 2100, y: 380, w: 160, h: 25},
-    {x: 2400, y: 450, w: 180, h: 25},
-    {x: 2700, y: 350, w: 180, h: 25},
+    {x:2100, y:380, w:160, h:25},
+    {x:2400, y:450, w:180, h:25},
+    {x:2700, y:350, w:180, h:25},
 
-    {x: 3000, y: 500, w: 300, h: 50}
+    {x:3000, y:500, w:300, h:50}
 ];
 
 
-// ======================================
-// COINS
-// ======================================
+/* ==================================================
+   COINS
+================================================== */
 
 const coins = [
 
-    {x: 130, y: 410, collected:false},
-    {x: 350, y: 350, collected:false},
-    {x: 580, y: 410, collected:false},
-    {x: 810, y: 310, collected:false},
+    {x:130, y:410, collected:false},
+    {x:350, y:350, collected:false},
+    {x:580, y:410, collected:false},
+    {x:810, y:310, collected:false},
 
-    {x: 1100, y: 430, collected:false},
-    {x: 1360, y: 360, collected:false},
-    {x: 1600, y: 290, collected:false},
-    {x: 1880, y: 410, collected:false},
+    {x:1100, y:430, collected:false},
+    {x:1360, y:360, collected:false},
+    {x:1600, y:290, collected:false},
+    {x:1880, y:410, collected:false},
 
-    {x: 2160, y: 340, collected:false},
-    {x: 2470, y: 410, collected:false},
-    {x: 2780, y: 310, collected:false}
+    {x:2160, y:340, collected:false},
+    {x:2470, y:410, collected:false},
+    {x:2780, y:310, collected:false}
 ];
 
 
-// ======================================
-// ENEMIES
-// ======================================
+/* ==================================================
+   ENEMIES
+================================================== */
 
 const enemies = [
 
     {
-        x: 400,
-        y: 355,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 300,
-        maxX: 415,
-        alive: true
+        x:400,
+        y:355,
+        w:35,
+        h:35,
+        vx:2,
+        minX:300,
+        maxX:415,
+        alive:true
     },
 
     {
-        x: 850,
-        y: 315,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 760,
-        maxX: 875,
-        alive: true
+        x:850,
+        y:315,
+        w:35,
+        h:35,
+        vx:2,
+        minX:760,
+        maxX:875,
+        alive:true
     },
 
     {
-        x: 1400,
-        y: 365,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 1300,
-        maxX: 1435,
-        alive: true
+        x:1400,
+        y:365,
+        w:35,
+        h:35,
+        vx:2,
+        minX:1300,
+        maxX:1435,
+        alive:true
     },
 
     {
-        x: 1900,
-        y: 415,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 1800,
-        maxX: 1965,
-        alive: true
+        x:1900,
+        y:415,
+        w:35,
+        h:35,
+        vx:2,
+        minX:1800,
+        maxX:1965,
+        alive:true
     },
 
     {
-        x: 2170,
-        y: 345,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 2100,
-        maxX: 2225,
-        alive: true
+        x:2170,
+        y:345,
+        w:35,
+        h:35,
+        vx:2,
+        minX:2100,
+        maxX:2225,
+        alive:true
     },
 
     {
-        x: 2500,
-        y: 415,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 2400,
-        maxX: 2545,
-        alive: true
+        x:2500,
+        y:415,
+        w:35,
+        h:35,
+        vx:2,
+        minX:2400,
+        maxX:2545,
+        alive:true
     },
 
     {
-        x: 2800,
-        y: 315,
-        w: 35,
-        h: 35,
-        vx: 2,
-        minX: 2700,
-        maxX: 2845,
-        alive: true
+        x:2800,
+        y:315,
+        w:35,
+        h:35,
+        vx:2,
+        minX:2700,
+        maxX:2845,
+        alive:true
     }
 ];
 
 
-// ======================================
-// FINISH FLAG
-// ======================================
+/* ==================================================
+   GOAL
+================================================== */
 
 const goal = {
 
-    x: 3180,
-    y: 430,
+    x:3180,
+    y:430,
 
-    w: 30,
-    h: 70
+    w:30,
+    h:70
 };
 
 
-// ======================================
-// COLLISION
-// ======================================
+/* ==================================================
+   COLLISION
+================================================== */
 
-function collision(a, b) {
+function collision(a,b) {
 
     return (
 
         a.x < b.x + b.w &&
-
         a.x + a.width > b.x &&
-
         a.y < b.y + b.h &&
-
         a.y + a.height > b.y
+
     );
 }
 
 
-// ======================================
-// RESET PLAYER
-// ======================================
+/* ==================================================
+   RESET
+================================================== */
 
 function resetPlayer() {
 
@@ -476,46 +766,42 @@ function resetPlayer() {
 }
 
 
-// ======================================
-// PLAYER UPDATE
-// ======================================
+/* ==================================================
+   PLAYER UPDATE
+================================================== */
 
 function updatePlayer() {
 
-    if (gameOver || gameWon) return;
+    if (gameOver || gameWon)
+        return;
+
 
     player.vx = 0;
 
 
-    // Gerak kiri
-
     if (
-        keys["arrowleft"] ||
-        keys["a"]
+        keys.arrowleft ||
+        keys.a
     ) {
 
         player.vx = -speed;
     }
 
 
-    // Gerak kanan
-
     if (
-        keys["arrowright"] ||
-        keys["d"]
+        keys.arrowright ||
+        keys.d
     ) {
 
         player.vx = speed;
     }
 
 
-    // Lompat
-
     if (
         (
-            keys["space"] ||
-            keys["w"] ||
-            keys["arrowup"]
+            keys.space ||
+            keys.w ||
+            keys.arrowup
         ) &&
         player.grounded
     ) {
@@ -526,49 +812,52 @@ function updatePlayer() {
     }
 
 
-    // Gravity
-
     player.vy += gravity;
-
-
-    // Posisi
 
     player.x += player.vx;
     player.y += player.vy;
 
-
     player.grounded = false;
 
-
-    // Platform collision
 
     for (const platform of platforms) {
 
         const wasAbove =
-            player.y + player.height - player.vy <= platform.y;
+            player.y +
+            player.height -
+            player.vy <=
+            platform.y;
 
-        const isFalling =
+        const falling =
             player.vy >= 0;
 
         const horizontal =
-            player.x < platform.x + platform.w &&
-            player.x + player.width > platform.x;
+            player.x <
+            platform.x + platform.w &&
+            player.x + player.width >
+            platform.x;
 
         const vertical =
-            player.y + player.height >= platform.y &&
-            player.y + player.height <=
-            platform.y + platform.h + 10;
+            player.y +
+            player.height >=
+            platform.y &&
+            player.y +
+            player.height <=
+            platform.y +
+            platform.h +
+            10;
 
 
         if (
             horizontal &&
             vertical &&
             wasAbove &&
-            isFalling
+            falling
         ) {
 
             player.y =
-                platform.y - player.height;
+                platform.y -
+                player.height;
 
             player.vy = 0;
 
@@ -577,14 +866,9 @@ function updatePlayer() {
     }
 
 
-    // Batas kiri
-
-    if (player.x < 0) {
+    if (player.x < 0)
         player.x = 0;
-    }
 
-
-    // Jatuh
 
     if (player.y > 700) {
 
@@ -592,45 +876,46 @@ function updatePlayer() {
     }
 
 
-    // Camera
+    cameraX =
+        player.x - 300;
 
-    cameraX = player.x - 300;
 
-    if (cameraX < 0) {
+    if (cameraX < 0)
         cameraX = 0;
-    }
+
 
     const maxCamera =
         3300 - canvas.width;
 
-    if (cameraX > maxCamera) {
+
+    if (cameraX > maxCamera)
         cameraX = maxCamera;
-    }
 }
 
 
-// ======================================
-// COIN UPDATE
-// ======================================
+/* ==================================================
+   COINS
+================================================== */
 
 function updateCoins() {
 
     for (const coin of coins) {
 
-        if (coin.collected) continue;
+        if (coin.collected)
+            continue;
 
 
-        const coinBox = {
+        const box = {
 
-            x: coin.x - 12,
-            y: coin.y - 12,
+            x:coin.x - 12,
+            y:coin.y - 12,
 
-            w: 24,
-            h: 24
+            width:24,
+            height:24
         };
 
 
-        if (collision(player, coinBox)) {
+        if (collision(player,box)) {
 
             coin.collected = true;
 
@@ -642,21 +927,20 @@ function updateCoins() {
 }
 
 
-// ======================================
-// ENEMY UPDATE
-// ======================================
+/* ==================================================
+   ENEMIES
+================================================== */
 
 function updateEnemies() {
 
     for (const enemy of enemies) {
 
-        if (!enemy.alive) continue;
+        if (!enemy.alive)
+            continue;
 
 
         enemy.x += enemy.vx;
 
-
-        // Patrol
 
         if (enemy.x <= enemy.minX) {
 
@@ -676,25 +960,24 @@ function updateEnemies() {
         }
 
 
-        const enemyBox = {
+        const box = {
 
-            x: enemy.x,
-            y: enemy.y,
+            x:enemy.x,
+            y:enemy.y,
 
-            w: enemy.w,
-            h: enemy.h
+            width:enemy.w,
+            height:enemy.h
         };
 
 
-        if (collision(player, enemyBox)) {
-
-
-            // Menginjak musuh
+        if (collision(player,box)) {
 
             if (
                 player.vy > 0 &&
-                player.y + player.height <
-                enemy.y + enemy.h * 0.7
+                player.y +
+                player.height <
+                enemy.y +
+                enemy.h * .7
             ) {
 
                 enemy.alive = false;
@@ -712,13 +995,14 @@ function updateEnemies() {
 }
 
 
-// ======================================
-// LOSE LIFE
-// ======================================
+/* ==================================================
+   LIFE
+================================================== */
 
 function loseLife() {
 
-    if (gameOver || gameWon) return;
+    if (gameOver || gameWon)
+        return;
 
 
     player.lives--;
@@ -737,46 +1021,48 @@ function loseLife() {
 }
 
 
-// ======================================
-// CHECK GOAL
-// ======================================
+/* ==================================================
+   GOAL
+================================================== */
 
 function checkGoal() {
 
-    const goalBox = {
+    const box = {
 
-        x: goal.x,
-        y: goal.y,
+        x:goal.x,
+        y:goal.y,
 
-        w: goal.w,
-        h: goal.h
+        width:goal.w,
+        height:goal.h
     };
 
 
-    if (collision(player, goalBox)) {
+    if (collision(player,box)) {
 
         endGame(true);
     }
 }
 
 
-// ======================================
-// HUD
-// ======================================
+/* ==================================================
+   HUD
+================================================== */
 
 function updateHUD() {
 
     document.getElementById("coinText")
-        .textContent = player.coins;
+        .textContent =
+        player.coins;
 
     document.getElementById("lifeText")
-        .textContent = player.lives;
+        .textContent =
+        player.lives;
 }
 
 
-// ======================================
-// END GAME
-// ======================================
+/* ==================================================
+   END GAME
+================================================== */
 
 function endGame(won) {
 
@@ -785,7 +1071,8 @@ function endGame(won) {
         gameWon = true;
 
         document.getElementById("messageTitle")
-            .textContent = "🎉 MENANG!";
+            .textContent =
+            "🎉 MENANG!";
 
         document.getElementById("messageText")
             .textContent =
@@ -796,7 +1083,8 @@ function endGame(won) {
         gameOver = true;
 
         document.getElementById("messageTitle")
-            .textContent = "💀 GAME OVER";
+            .textContent =
+            "💀 GAME OVER";
 
         document.getElementById("messageText")
             .textContent =
@@ -805,31 +1093,27 @@ function endGame(won) {
 
 
     document.getElementById("message")
-        .style.display = "flex";
+        .style.display =
+        "flex";
 }
 
 
-// ======================================
-// RESTART GAME
-// ======================================
+/* ==================================================
+   RESTART
+================================================== */
 
 function restartGame() {
 
     player.coins = 0;
-
     player.lives = 3;
 
 
-    for (const coin of coins) {
-
+    for (const coin of coins)
         coin.collected = false;
-    }
 
 
-    for (const enemy of enemies) {
-
+    for (const enemy of enemies)
         enemy.alive = true;
-    }
 
 
     gameOver = false;
@@ -837,7 +1121,8 @@ function restartGame() {
 
 
     document.getElementById("message")
-        .style.display = "none";
+        .style.display =
+        "none";
 
 
     resetPlayer();
@@ -846,45 +1131,99 @@ function restartGame() {
 }
 
 
-// ======================================
-// RESTART BUTTON
-// ======================================
-
 document.getElementById("restart")
-    .addEventListener("click", restartGame);
+    .addEventListener(
+        "click",
+        restartGame
+    );
 
 
-// ======================================
-// DRAW BACKGROUND
-// ======================================
+/* ==================================================
+   BACKGROUND
+================================================== */
 
 function drawBackground() {
 
-    // Langit
+    /* Sky gradient */
 
-    ctx.fillStyle = "#6ec6ff";
+    const sky =
+        ctx.createLinearGradient(
+            0,0,
+            0,canvas.height
+        );
+
+    sky.addColorStop(
+        0,
+        "#49bdf5"
+    );
+
+    sky.addColorStop(
+        .55,
+        "#8ee0ff"
+    );
+
+    sky.addColorStop(
+        1,
+        "#d8f5ff"
+    );
+
+    ctx.fillStyle = sky;
 
     ctx.fillRect(
-        0,
-        0,
+        0,0,
         canvas.width,
         canvas.height
     );
 
 
-    // Matahari
+    /* Sun glow */
 
     const sunX =
-        850 - cameraX * 0.15;
+        850 -
+        cameraX * .12;
 
-    ctx.fillStyle = "#ffd43b";
+    const sunY = 95;
+
+
+    const glow =
+        ctx.createRadialGradient(
+            sunX,
+            sunY,
+            10,
+            sunX,
+            sunY,
+            100
+        );
+
+    glow.addColorStop(
+        0,
+        "rgba(255,245,150,.8)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(255,245,150,0)"
+    );
+
+    ctx.fillStyle = glow;
+
+    ctx.fillRect(
+        sunX - 100,
+        sunY - 100,
+        200,
+        200
+    );
+
+
+    ctx.fillStyle =
+        "#ffe066";
 
     ctx.beginPath();
 
     ctx.arc(
         sunX,
-        90,
-        45,
+        sunY,
+        40,
         0,
         Math.PI * 2
     );
@@ -892,463 +1231,731 @@ function drawBackground() {
     ctx.fill();
 
 
-    // Awan
+    /* Clouds */
 
-    const clouds = [
+    drawCloud(100,100,.9);
+    drawCloud(500,145,1);
+    drawCloud(850,90,.8);
+    drawCloud(1250,120,1);
+    drawCloud(1800,105,.9);
+    drawCloud(2400,135,1);
+    drawCloud(2900,90,.8);
 
-        {x:100, y:100},
-        {x:500, y:140},
-        {x:850, y:90},
-        {x:1200, y:120},
-        {x:1800, y:100},
-        {x:2400, y:140},
-        {x:2900, y:90}
-    ];
 
+    /* Far mountains */
 
     ctx.fillStyle =
-        "rgba(255,255,255,.85)";
-
-
-    for (const cloud of clouds) {
-
-        const x =
-            cloud.x -
-            cameraX * 0.25;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            cloud.y,
-            25,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.arc(
-            x + 30,
-            cloud.y - 10,
-            35,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.arc(
-            x + 65,
-            cloud.y,
-            25,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fill();
-    }
-
-
-    // Gunung
-
-    ctx.fillStyle = "#6aaa50";
+        "#78b879";
 
 
     for (
-        let x = -500;
-        x < 4000;
-        x += 350
+        let x=-600;
+        x<4200;
+        x+=360
     ) {
 
-        const screenX =
-            x - cameraX * 0.5;
-
+        const sx =
+            x -
+            cameraX*.25;
 
         ctx.beginPath();
 
         ctx.moveTo(
-            screenX,
+            sx,
             550
         );
 
         ctx.lineTo(
-            screenX + 175,
-            300
+            sx+180,
+            315
         );
 
         ctx.lineTo(
-            screenX + 350,
+            sx+360,
             550
         );
 
         ctx.fill();
     }
+
+
+    /* Near mountains */
+
+    ctx.fillStyle =
+        "#4d9660";
+
+
+    for (
+        let x=-500;
+        x<4200;
+        x+=420
+    ) {
+
+        const sx =
+            x -
+            cameraX*.42;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            sx,
+            550
+        );
+
+        ctx.lineTo(
+            sx+210,
+            365
+        );
+
+        ctx.lineTo(
+            sx+420,
+            550
+        );
+
+        ctx.fill();
+    }
+
+
+    /* Small grass background */
+
+    ctx.fillStyle =
+        "rgba(40,120,70,.25)";
+
+    ctx.fillRect(
+        0,
+        520,
+        canvas.width,
+        30
+    );
 }
 
 
-// ======================================
-// DRAW PLATFORMS
-// ======================================
+/* ==================================================
+   CLOUD
+================================================== */
+
+function drawCloud(worldX,y,scale) {
+
+    const x =
+        worldX -
+        cameraX*.22;
+
+
+    ctx.fillStyle =
+        "rgba(255,255,255,.82)";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y,
+        22*scale,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+28*scale,
+        y-13*scale,
+        30*scale,
+        0,
+        Math.PI*2
+    );
+
+    ctx.arc(
+        x+60*scale,
+        y,
+        23*scale,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+}
+
+
+/* ==================================================
+   PLATFORMS
+================================================== */
 
 function drawPlatforms() {
 
-    for (const platform of platforms) {
+    for (const p of platforms) {
 
         const x =
-            platform.x - cameraX;
+            p.x -
+            cameraX;
 
 
         if (
-            x + platform.w < 0 ||
+            x+p.w < 0 ||
             x > canvas.width
-        ) {
+        )
             continue;
-        }
 
 
-        // Tanah
+        /* Dirt */
 
-        ctx.fillStyle = "#8b5a2b";
+        const dirt =
+            ctx.createLinearGradient(
+                0,
+                p.y,
+                0,
+                p.y+p.h
+            );
+
+        dirt.addColorStop(
+            0,
+            "#9a622f"
+        );
+
+        dirt.addColorStop(
+            1,
+            "#613718"
+        );
+
+        ctx.fillStyle = dirt;
 
         ctx.fillRect(
             x,
-            platform.y,
-            platform.w,
-            platform.h
+            p.y,
+            p.w,
+            p.h
         );
 
 
-        // Rumput
+        /* Grass */
 
-        ctx.fillStyle = "#42a85f";
+        ctx.fillStyle =
+            "#42b866";
 
         ctx.fillRect(
             x,
-            platform.y,
-            platform.w,
-            7
+            p.y,
+            p.w,
+            8
         );
 
 
-        // Detail tanah
+        /* Grass highlight */
 
-        ctx.fillStyle = "#70451f";
+        ctx.fillStyle =
+            "#73d681";
+
+        ctx.fillRect(
+            x,
+            p.y,
+            p.w,
+            3
+        );
+
+
+        /* Dirt details */
+
+        ctx.fillStyle =
+            "rgba(60,30,10,.45)";
 
 
         for (
-            let i = 10;
-            i < platform.w;
-            i += 30
+            let i=12;
+            i<p.w-5;
+            i+=28
         ) {
 
             ctx.fillRect(
-                x + i,
-                platform.y + 12,
+                x+i,
+                p.y+14,
                 5,
-                5
+                4
             );
         }
     }
 }
 
 
-// ======================================
-// DRAW COINS
-// ======================================
+/* ==================================================
+   COINS
+================================================== */
 
 function drawCoins() {
 
+    const time =
+        performance.now()*.005;
+
+
     for (const coin of coins) {
 
-        if (coin.collected) continue;
+        if (coin.collected)
+            continue;
 
 
         const x =
-            coin.x - cameraX;
+            coin.x -
+            cameraX;
 
 
-        ctx.fillStyle = "#ffd43b";
+        const scale =
+            .82 +
+            Math.abs(Math.sin(time+coin.x))*.18;
+
+
+        ctx.save();
+
+        ctx.translate(
+            x,
+            coin.y
+        );
+
+        ctx.scale(
+            scale,
+            1
+        );
+
+
+        /* Glow */
+
+        ctx.shadowColor =
+            "#ffd43b";
+
+        ctx.shadowBlur = 14;
+
+
+        ctx.fillStyle =
+            "#ffd43b";
 
 
         ctx.beginPath();
 
         ctx.arc(
-            x,
-            coin.y,
-            11,
             0,
-            Math.PI * 2
+            0,
+            12,
+            0,
+            Math.PI*2
         );
 
         ctx.fill();
 
 
-        ctx.fillStyle = "#fff4a3";
+        ctx.shadowBlur = 0;
+
+
+        ctx.strokeStyle =
+            "#e5a900";
+
+        ctx.lineWidth = 3;
+
+        ctx.stroke();
+
+
+        ctx.fillStyle =
+            "#fff5a8";
 
 
         ctx.beginPath();
 
         ctx.arc(
-            x - 3,
-            coin.y - 3,
+            -3,
+            -4,
             3,
             0,
-            Math.PI * 2
+            Math.PI*2
         );
 
         ctx.fill();
+
+
+        ctx.restore();
     }
 }
 
 
-// ======================================
-// DRAW ENEMIES
-// ======================================
+/* ==================================================
+   ENEMIES
+================================================== */
 
 function drawEnemies() {
 
     for (const enemy of enemies) {
 
-        if (!enemy.alive) continue;
+        if (!enemy.alive)
+            continue;
 
 
         const x =
-            enemy.x - cameraX;
+            enemy.x -
+            cameraX;
 
 
-        // Badan
+        /* Shadow */
 
-        ctx.fillStyle = "#e63946";
+        ctx.fillStyle =
+            "rgba(0,0,0,.22)";
+
+        ctx.fillRect(
+            x+3,
+            enemy.y+34,
+            30,
+            5
+        );
+
+
+        /* Body */
+
+        ctx.fillStyle =
+            "#e63946";
 
         ctx.fillRect(
             x,
-            enemy.y,
+            enemy.y+5,
             enemy.w,
-            enemy.h
+            enemy.h-5
         );
 
 
-        // Mata
+        /* Head */
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle =
+            "#ff4d5a";
 
         ctx.fillRect(
-            x + 7,
-            enemy.y + 8,
+            x+3,
+            enemy.y,
+            enemy.w-6,
+            28
+        );
+
+
+        /* Eyes */
+
+        ctx.fillStyle =
+            "#fff";
+
+        ctx.fillRect(
+            x+7,
+            enemy.y+8,
             7,
-            8
+            9
         );
 
         ctx.fillRect(
-            x + 21,
-            enemy.y + 8,
+            x+21,
+            enemy.y+8,
             7,
-            8
+            9
         );
 
 
-        // Pupil
-
-        ctx.fillStyle = "#111";
+        ctx.fillStyle =
+            "#111";
 
         ctx.fillRect(
-            x + 9,
-            enemy.y + 10,
+            x+9,
+            enemy.y+11,
             4,
             5
         );
 
         ctx.fillRect(
-            x + 23,
-            enemy.y + 10,
+            x+23,
+            enemy.y+11,
             4,
             5
         );
 
 
-        // Kaki
+        /* Feet */
 
-        ctx.fillStyle = "#7f1d1d";
+        ctx.fillStyle =
+            "#711f29";
 
         ctx.fillRect(
-            x + 3,
-            enemy.y + 30,
-            10,
-            5
+            x+3,
+            enemy.y+30,
+            11,
+            6
         );
 
         ctx.fillRect(
-            x + 22,
-            enemy.y + 30,
-            10,
-            5
+            x+21,
+            enemy.y+30,
+            11,
+            6
         );
     }
 }
 
 
-// ======================================
-// DRAW PLAYER
-// ======================================
+/* ==================================================
+   PLAYER
+================================================== */
 
 function drawPlayer() {
 
     const x =
-        player.x - cameraX;
+        player.x -
+        cameraX;
 
     const y =
         player.y;
 
 
-    // Badan
+    /* Shadow */
 
-    ctx.fillStyle = "#e63946";
+    if (player.grounded) {
+
+        ctx.fillStyle =
+            "rgba(0,0,0,.25)";
+
+        ctx.fillRect(
+            x+4,
+            y+49,
+            28,
+            5
+        );
+    }
+
+
+    /* Legs */
+
+    ctx.fillStyle =
+        "#17418f";
 
     ctx.fillRect(
-        x + 5,
-        y + 15,
-        26,
-        30
+        x+6,
+        y+39,
+        10,
+        12
+    );
+
+    ctx.fillRect(
+        x+20,
+        y+39,
+        10,
+        12
     );
 
 
-    // Baju
+    /* Shoes */
 
-    ctx.fillStyle = "#2563eb";
+    ctx.fillStyle =
+        "#242424";
 
     ctx.fillRect(
-        x + 5,
-        y + 30,
-        26,
-        15
+        x+4,
+        y+48,
+        13,
+        5
+    );
+
+    ctx.fillRect(
+        x+19,
+        y+48,
+        13,
+        5
     );
 
 
-    // Kepala
+    /* Body */
 
-    ctx.fillStyle = "#f4b183";
+    ctx.fillStyle =
+        "#2463d4";
 
     ctx.fillRect(
-        x + 8,
+        x+5,
+        y+19,
+        26,
+        25
+    );
+
+
+    /* Shirt highlight */
+
+    ctx.fillStyle =
+        "#4d8cff";
+
+    ctx.fillRect(
+        x+8,
+        y+21,
+        7,
+        18
+    );
+
+
+    /* Arms */
+
+    ctx.fillStyle =
+        "#e9a477";
+
+    ctx.fillRect(
+        x+1,
+        y+21,
+        7,
+        17
+    );
+
+    ctx.fillRect(
+        x+28,
+        y+21,
+        7,
+        17
+    );
+
+
+    /* Head */
+
+    ctx.fillStyle =
+        "#f4b183";
+
+    ctx.fillRect(
+        x+8,
         y,
         20,
-        20
+        21
     );
 
 
-    // Rambut
-
-    ctx.fillStyle = "#5b321a";
+    /* Ear */
 
     ctx.fillRect(
-        x + 7,
+        x+5,
+        y+8,
+        5,
+        8
+    );
+
+
+    /* Hair */
+
+    ctx.fillStyle =
+        "#4b2916";
+
+    ctx.fillRect(
+        x+7,
         y,
         22,
         7
     );
 
-
-    // Mata
-
-    ctx.fillStyle = "#111";
+    ctx.fillRect(
+        x+8,
+        y+5,
+        5,
+        5
+    );
 
     ctx.fillRect(
-        x + 22,
-        y + 8,
+        x+21,
+        y+4,
+        8,
+        5
+    );
+
+
+    /* Eye */
+
+    ctx.fillStyle =
+        "#111";
+
+    ctx.fillRect(
+        x+22,
+        y+9,
         3,
-        3
-    );
-
-
-    // Kaki
-
-    ctx.fillStyle = "#173f8a";
-
-    ctx.fillRect(
-        x + 7,
-        y + 43,
-        9,
-        7
-    );
-
-    ctx.fillRect(
-        x + 20,
-        y + 43,
-        9,
-        7
-    );
-
-
-    // Sepatu
-
-    ctx.fillStyle = "#222";
-
-    ctx.fillRect(
-        x + 5,
-        y + 48,
-        12,
         4
     );
 
+
+    /* Smile */
+
     ctx.fillRect(
-        x + 19,
-        y + 48,
-        12,
-        4
+        x+19,
+        y+16,
+        6,
+        2
     );
 }
 
 
-// ======================================
-// DRAW GOAL
-// ======================================
+/* ==================================================
+   GOAL
+================================================== */
 
 function drawGoal() {
 
     const x =
-        goal.x - cameraX;
+        goal.x -
+        cameraX;
 
 
-    // Tiang
+    /* Pole */
 
-    ctx.fillStyle = "#444";
+    ctx.fillStyle =
+        "#555";
 
     ctx.fillRect(
         x,
         goal.y,
-        6,
+        7,
         goal.h
     );
 
 
-    // Bendera
+    ctx.fillStyle =
+        "#aaa";
 
-    ctx.fillStyle = "#ffd43b";
+    ctx.fillRect(
+        x+1,
+        goal.y,
+        2,
+        goal.h
+    );
+
+
+    /* Flag */
+
+    ctx.fillStyle =
+        "#ffd43b";
 
     ctx.beginPath();
 
     ctx.moveTo(
-        x + 6,
+        x+7,
         goal.y
     );
 
     ctx.lineTo(
-        x + 48,
-        goal.y + 15
+        x+52,
+        goal.y+15
     );
 
     ctx.lineTo(
-        x + 6,
-        goal.y + 30
+        x+7,
+        goal.y+30
     );
 
     ctx.closePath();
 
     ctx.fill();
+
+
+    /* Flag detail */
+
+    ctx.fillStyle =
+        "#f59f00";
+
+    ctx.fillRect(
+        x+8,
+        goal.y+13,
+        20,
+        4
+    );
 }
 
 
-// ======================================
-// DRAW
-// ======================================
+/* ==================================================
+   DRAW
+================================================== */
 
 function draw() {
 
@@ -1366,9 +1973,9 @@ function draw() {
 }
 
 
-// ======================================
-// UPDATE
-// ======================================
+/* ==================================================
+   UPDATE
+================================================== */
 
 function update() {
 
@@ -1384,9 +1991,9 @@ function update() {
 }
 
 
-// ======================================
-// GAME LOOP
-// ======================================
+/* ==================================================
+   GAME LOOP
+================================================== */
 
 function gameLoop() {
 
@@ -1394,13 +2001,15 @@ function gameLoop() {
 
     draw();
 
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(
+        gameLoop
+    );
 }
 
 
-// ======================================
-// START
-// ======================================
+/* ==================================================
+   START
+================================================== */
 
 updateHUD();
 
