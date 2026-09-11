@@ -389,7 +389,33 @@ canvas {
 
 <div id="gameWrap">
     <canvas id="game"></canvas>
-</div>
+</div>  <
+function updateCoins() {
+
+    for (const coin of coins) {
+
+        if (coin.collected)
+            continue;
+
+        const box = {
+
+            x: coin.x - 12,
+            y: coin.y - 12,
+
+            width: 24,
+            height: 24
+        };
+
+        if (collision(player, box)) {
+
+            coin.collected = true;
+
+            player.coins++;
+
+            updateHUD();
+        }
+    }
+}
 
 
 </div>
@@ -411,15 +437,15 @@ canvas {
     <div id="messageBox">
 
         <h1 id="messageTitle">
-            HAHA DONGO 😹
+            Maen Yang Bener Dongo 😹
         </h1>
 
         <p id="messageText">
-            LAGI LAGI
+            TOLOL 😭
         </p>
 
         <button id="restart">
-            LAGI LAH MASA SEGITU DOANG 🤭
+            🔄 jajal lagi
         </button>
 
     </div>
@@ -1360,13 +1386,13 @@ function endGame(won) {
         document.getElementById(
             "messageTitle"
         ).textContent =
-            "HAHA DONGO 😹";
+            "MAEN YANG BENER DONGO 😹";
 
 
         document.getElementById(
             "messageText"
         ).textContent =
-            "LAGI DONG JAGOAN 😵‍💫!";
+            "MAMPUS 🤭!";
 
     }
 
@@ -2466,4 +2492,4 @@ gameLoop();
 </script>
 
 </body>
-  </html>
+</html>
